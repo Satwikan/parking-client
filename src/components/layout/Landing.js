@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { LinkedinFilled } from "@ant-design/icons";
 
 class Landing extends Component {
   render() {
@@ -6,42 +7,20 @@ class Landing extends Component {
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row">
           <div className="col s12 center-align">
-            <h4>
-              <b>Build</b> a login/auth app with the{" "}
-              <span style={{ fontFamily: "monospace" }}>MERN</span> stack from
-              scratch
-            </h4>
+            <h3>
+              Welcome to Parking management <b>Web App</b>{" "}
+            </h3>
+            <h5>Toggle Left Menu to get Started</h5>
             <p className="flow-text grey-text text-darken-1">
-              Create a (minimal) full-stack app with user authentication via
-              passport and JWTs
+              Build by{" "}
+              <a href="https://www.linkedin.com/in/satwik-anmol-1487a3191/">
+                @Satwikan
+              </a>
+              <span>
+                <LinkedinFilled />
+              </span>
             </p>
             <br />
-            <div className="col s6">
-              <a
-                href="/register"
-                style={{
-                  width: "140px",
-                  borderRadius: "3px",
-                  letterSpacing: "1.5px",
-                }}
-                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-              >
-                Register
-              </a>
-            </div>
-            <div className="col s6">
-              <a
-                href="/login"
-                style={{
-                  width: "140px",
-                  borderRadius: "3px",
-                  letterSpacing: "1.5px",
-                }}
-                className="btn btn-large btn-flat waves-effect white black-text"
-              >
-                Log In
-              </a>
-            </div>
           </div>
         </div>
       </div>

@@ -35,13 +35,9 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
+        <Navbar />
         <Router>
           <div className="App">
-            <Navbar />
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/register" component={Register} />
-            <Route path="/confirm/:confirmationCode" component={Welcome} />
-            <Route exact path="/login" component={Login} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
             </Switch>

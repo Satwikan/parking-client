@@ -1,25 +1,134 @@
+import "./Navbar.css";
+import "antd/dist/antd.css";
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { logoutUser } from "../../actions/authActions";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+// Components
+import Register from "../auth/Register";
+import Login from "../auth/Login";
+import Welcome from "../auth/Welcome";
+import BookSlot from "./BookSlot";
+import History from "./History";
+import Landing from "./Landing";
+
+// Routes that need auth
+import PrivateRoute from "../private-route/PrivateRoute";
+
+import { Layout, Menu } from "antd";
+import {
+  DesktopOutlined,
+  PieChartOutlined,
+  FileOutlined,
+  UserOutlined,
+  LogoutOutlined,
+  LoginOutlined,
+  TrademarkCircleFilled,
+} from "@ant-design/icons";
+
+const { Header, Content, Sider } = Layout;
+const { SubMenu } = Menu;
 
 class Navbar extends Component {
+  state = {
+    collapsed: false,
+  };
+
+  onLogoutClick = (e) => {
+    this.props.logoutUser();
+  };
+
+  onCollapse = (collapsed) => {
+    console.log(collapsed);
+    this.setState({ collapsed });
+  };
+
+  authShow(user) {
+    if (Object.keys(user).length === 0)
+      return (
+        <>
+          <Menu.Item key="3" icon={<LoginOutlined />}>
+            <span>Login</span>
+            <a href="/login" />
+          </Menu.Item>
+
+          <Menu.Item key="4" icon={<TrademarkCircleFilled />}>
+            <span>Register</span>
+            <a href="/register" />
+          </Menu.Item>
+        </>
+      );
+    else
+      return (
+        <>
+          <Menu.Item key="4" icon={<FileOutlined />}>
+            <span>History</span>
+            <a href="/history" alt="history" />
+          </Menu.Item>
+
+          <Menu.Item
+            key="3"
+            onClick={this.onLogoutClick}
+            icon={<LogoutOutlined />}
+          >
+            <span>Logout</span>
+          </Menu.Item>
+        </>
+      );
+  }
+
   render() {
+    const { collapsed } = this.state;
+    const { user } = this.props.auth;
     return (
-      <div className="navbar-fixed">
-        <nav className="z-depth-0">
-          <div className="nav-wrapper white">
-            <a
-              href="/"
-              style={{
-                fontFamily: "monospace",
-              }}
-              className="col s5 brand-logo center black-text"
+      <Layout style={{ minHeight: "100vh" }}>
+        <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
+          <div className="logo"></div>
+          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+            <Menu.Item key="1" icon={<DesktopOutlined />}>
+              <span>Home</span>
+              <a href="/" />
+            </Menu.Item>
+            <Menu.Item key="2" icon={<PieChartOutlined />}>
+              <span>Book Your Slot</span>
+              <a href="/book" alt="book slot" />
+            </Menu.Item>
+            <SubMenu key="sub1" icon={<UserOutlined />} title="User">
+              {this.authShow(user)}
+            </SubMenu>
+          </Menu>
+        </Sider>
+        <Layout className="site-layout">
+          <Header className="site-layout-background" style={{ padding: 0 }} />
+          <Content style={{ margin: "0 16px" }}>
+            <div
+              className="site-layout-background"
+              style={{ padding: 24, minHeight: 360 }}
             >
-              <i className="material-icons">code</i>
-              MERN
-            </a>
-          </div>
-        </nav>
-      </div>
+              <Router>
+                <Route exact path="/" component={Landing} />
+
+                <Route exact path="/register" component={Register} />
+                <Route path="/confirm/:confirmationCode" component={Welcome} />
+                <Route exact path="/login" component={Login} />
+                <PrivateRoute exact path="/book" component={BookSlot} />
+                <PrivateRoute exact path="/history" component={History} />
+                {JSON.stringify(user)}
+              </Router>
+            </div>
+          </Content>
+        </Layout>
+      </Layout>
     );
   }
 }
-export default Navbar;
+Navbar.propTypes = {
+  logoutUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+};
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+export default connect(mapStateToProps, { logoutUser })(Navbar);
