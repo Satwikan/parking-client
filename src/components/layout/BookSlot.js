@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { bookSlotApi, vacancyApi } from "../../actions/userActions";
+import { bookSlotApi, vacancyCheckApi } from "../../actions/userActions";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class BookSlot extends Component {
   constructor() {
@@ -18,7 +20,7 @@ class BookSlot extends Component {
     }
   }
   componentDidMount() {
-    this.state.vacancy = this.props.vacancyApi().data.message;
+    this.state.vacancy = this.props.vacancyCheckApi().data.message;
   }
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
@@ -28,9 +30,9 @@ class BookSlot extends Component {
     const userData = {
       id: this.props.auth.user.id,
       vName: this.state.vName,
-      vNumber:this.state.vNumber, 
+      vNumber: this.state.vNumber,
     };
-    this.props.rechargeApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    this.props.bookSlot(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
   };
   render() {
     return (
@@ -89,7 +91,8 @@ class BookSlot extends Component {
 }
 
 BookSlot.propTypes = {
-  vacancyApi: PropTypes.func.isRequired,
+  vacancyCheckApi: PropTypes.func.isRequired,
+  bookSlotApi: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
@@ -98,4 +101,6 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
-export default connect(mapStateToProps, { vacancyApi })(withRouter(BookSlot));
+export default connect(mapStateToProps, { vacancyCheckApi, bookSlotApi })(
+  BookSlot
+);
