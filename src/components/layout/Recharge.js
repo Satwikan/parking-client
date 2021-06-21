@@ -5,14 +5,13 @@ import { connect } from "react-redux";
 import { BACK_URL } from "../../proxy";
 import axios from "axios";
 
-
 class Recharge extends Component {
   constructor() {
     super();
     this.state = {
       amount: 0,
-      errors: {},
-      balance: "getting your data",
+      errors: "",
+      Balance: "",
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -39,22 +38,23 @@ class Recharge extends Component {
         console.log("Error from Recharge userActions.js:", err);
       });
   };
-  accountBalance = (user) => {
+  componentDidMount(user) {
     const userData = {
       id: user.id,
     };
     axios
       .get(BACK_URL + "api/account/balance", userData)
-      .then((res) => res)
+      .then((res) => {
+        if (res.error) {
+          this.setState({ errors: res.error });
+        } else this.setState({ Balance: res.Balance });
+      })
       .catch((err) => {
         console.log("Error from vacancy userActions.js:", err);
         return { balance: "can't connect to server" };
       });
-    return "Your Current Balance is:" + this.state.balance;
-  };
+  }
   render() {
-    const { user } = this.props.auth;
-    const { errors } = this.state;
     return (
       <div className="container">
         <div style={{ marginTop: "4rem" }} className="row">
@@ -64,7 +64,7 @@ class Recharge extends Component {
               home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h5>Current account balance:{this.state.balance}</h5>
+              <h6>Current account balance:{this.state.balance}</h6>
             </div>
             <br />
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
@@ -77,10 +77,9 @@ class Recharge extends Component {
                   value={this.state.amount}
                   id="amount"
                   type="number"
-                  error={errors.amount}
                 />
                 <label htmlFor="Amount">Amount</label>
-                <span className="red-text">{errors.amount}</span>
+                <span className="red-text">{this.state.errors}</span>
               </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <button

@@ -11,6 +11,8 @@ class BookSlot extends Component {
       vName: "",
       VNumber: "",
       vacancy: "",
+      response: "",
+      errors: "",
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -21,13 +23,14 @@ class BookSlot extends Component {
     }
   }
 
-  getVacancy() {
+  componentDidMount() {
     axios
       .get(BACK_URL + "api/account/vacancy")
-      .then((res) => (this.state.vacancy = res.vacancy))
+      .then((res) => {
+        this.setState({ vacancy: res.message });
+      })
       .catch((err) => {
         console.log("Error from vacancy userActions.js:", err);
-        this.state.vacancy = "can't connect to server";
       });
   }
   onChange = (e) => {
@@ -42,7 +45,19 @@ class BookSlot extends Component {
     };
     axios
       .post(BACK_URL + "api/account/book", userData)
-      .then((res) => console.log(res))
+      .then((res) => {
+        if (res.error) {
+          this.setState({ errors: res.error });
+        } else if (res.History) {
+          this.setState({
+            response:
+              "Slot booked Ticket no.: " +
+              res.History[res.History.length - 1].slotNumber +
+              "For more info got to history page",
+          });
+        }
+        console.log(res);
+      })
       .catch((err) => {
         console.log("Error from Book userActions.js:", err);
       });
@@ -71,6 +86,7 @@ class BookSlot extends Component {
                     type="text"
                   />
                   <label htmlFor="vName">Vehicle Name</label>
+                  <span className="red-text">{this.state.errors}</span>
                 </div>
                 <div className="input-field col s12">
                   <input
@@ -94,6 +110,10 @@ class BookSlot extends Component {
                     Book a Slot
                   </button>
                 </div>
+                <br />
+                <br />
+                <br />
+                <h5>{this.state.response}</h5>
               </form>
             </div>
           </div>
