@@ -8,11 +8,18 @@ class Landing extends Component {
         <div className="row">
           <div className="col s12 center-align">
             <h3>
-              Welcome to Parking management <b>Web App</b>{" "}
+              Welcome to <b>ParkX</b>{" "}
             </h3>
-            <h5>Toggle Left Menu to get Started</h5>
+            <h5>A Parking Management System Web App</h5>
+            <h6>(Toggle Left Menu to get Started)</h6>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
             <p className="flow-text grey-text text-darken-1">
-              Build by{" "}
+              Built by{" "}
               <a href="https://www.linkedin.com/in/satwik-anmol-1487a3191/">
                 @Satwikan
               </a>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { bookSlotApi, vacancyApi } from "../../actions/userActions";
 
 class BookSlot extends Component {
   constructor() {
@@ -6,12 +7,31 @@ class BookSlot extends Component {
     this.state = {
       vName: "",
       VNumber: "",
+      vacancy: "",
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors,
+      });
+    }
+  }
+  componentDidMount() {
+    this.state.vacancy = this.props.vacancyApi().data.message;
   }
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
   };
-  
+  onSubmit = (e) => {
+    e.preventDefault();
+    const userData = {
+      id: this.props.auth.user.id,
+      vName: this.state.vName,
+      vNumber:this.state.vNumber, 
+    };
+    this.props.rechargeApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+  };
   render() {
     return (
       <>
@@ -31,7 +51,7 @@ class BookSlot extends Component {
                 <div className="input-field col s12">
                   <input
                     onChange={this.onChange}
-                    value={this.state.email}
+                    value={this.state.vName}
                     id="vName"
                     type="text"
                   />
@@ -40,7 +60,7 @@ class BookSlot extends Component {
                 <div className="input-field col s12">
                   <input
                     onChange={this.onChange}
-                    value={this.state.email}
+                    value={this.state.vNumber}
                     id="vNumber"
                     type="text"
                   />
@@ -68,4 +88,14 @@ class BookSlot extends Component {
   }
 }
 
-export default BookSlot;
+BookSlot.propTypes = {
+  vacancyApi: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+};
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors,
+});
+
+export default connect(mapStateToProps, { vacancyApi })(withRouter(BookSlot));

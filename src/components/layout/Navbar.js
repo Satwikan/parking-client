@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Components
 import Register from "../auth/Register";
@@ -13,6 +13,8 @@ import Welcome from "../auth/Welcome";
 import BookSlot from "./BookSlot";
 import History from "./History";
 import Landing from "./Landing";
+import Recharge from "./Recharge";
+import VerifiedUser from "./VerifiedUser";
 
 // Routes that need auth
 import PrivateRoute from "../private-route/PrivateRoute";
@@ -26,6 +28,7 @@ import {
   LogoutOutlined,
   LoginOutlined,
   TrademarkCircleFilled,
+  MoneyCollectOutlined,
 } from "@ant-design/icons";
 
 const { Header, Content, Sider } = Layout;
@@ -63,11 +66,6 @@ class Navbar extends Component {
     else
       return (
         <>
-          <Menu.Item key="4" icon={<FileOutlined />}>
-            <span>History</span>
-            <a href="/history" alt="history" />
-          </Menu.Item>
-
           <Menu.Item
             key="3"
             onClick={this.onLogoutClick}
@@ -78,7 +76,10 @@ class Navbar extends Component {
         </>
       );
   }
-
+  userName = (user) => {
+    if (Object.keys(user).length === 0) return "User";
+    return user.name.split(" ")[0];
+  };
   render() {
     const { collapsed } = this.state;
     const { user } = this.props.auth;
@@ -91,13 +92,25 @@ class Navbar extends Component {
               <span>Home</span>
               <a href="/" />
             </Menu.Item>
+            <SubMenu
+              key="sub1"
+              icon={<UserOutlined />}
+              title={this.userName(user)}
+            >
+              {this.authShow(user)}
+            </SubMenu>
             <Menu.Item key="2" icon={<PieChartOutlined />}>
               <span>Book Your Slot</span>
               <a href="/book" alt="book slot" />
             </Menu.Item>
-            <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-              {this.authShow(user)}
-            </SubMenu>
+            <Menu.Item key="5" icon={<FileOutlined />}>
+              <span>History</span>
+              <a href="/history" alt="history" />
+            </Menu.Item>
+            <Menu.Item key="6" icon={<MoneyCollectOutlined />}>
+              <span>Recharge</span>
+              <a href="/recharge" alt="recharge" />
+            </Menu.Item>
           </Menu>
         </Sider>
         <Layout className="site-layout">
@@ -115,7 +128,15 @@ class Navbar extends Component {
                 <Route exact path="/login" component={Login} />
                 <PrivateRoute exact path="/book" component={BookSlot} />
                 <PrivateRoute exact path="/history" component={History} />
+                <PrivateRoute exact path="/recharge" component={Recharge} />
                 {JSON.stringify(user)}
+                <Switch>
+                  <PrivateRoute
+                    exact
+                    path="/dashboard"
+                    component={VerifiedUser}
+                  />
+                </Switch>
               </Router>
             </div>
           </Content>
