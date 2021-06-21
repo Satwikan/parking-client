@@ -129,7 +129,6 @@ class Navbar extends Component {
                 <PrivateRoute exact path="/book" component={BookSlot} />
                 <PrivateRoute exact path="/history" component={History} />
                 <PrivateRoute exact path="/recharge" component={Recharge} />
-                {JSON.stringify(user)}
                 <Switch>
                   <PrivateRoute
                     exact

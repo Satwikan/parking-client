@@ -33,27 +33,17 @@ class Recharge extends Component {
     // Recharge request
     axios
       .post(BACK_URL + "api/account/recharge", userData)
-      .then((res) => console.log(res))
+      .then((res) => {
+        if (res.data.error) {
+          this.setState({ errors: res.data.error });
+        } else this.setState({ Balance: res.data.Balance });
+        console.log(res);
+      })
       .catch((err) => {
         console.log("Error from Recharge userActions.js:", err);
       });
   };
-  componentDidMount(user) {
-    const userData = {
-      id: user.id,
-    };
-    axios
-      .get(BACK_URL + "api/account/balance", userData)
-      .then((res) => {
-        if (res.error) {
-          this.setState({ errors: res.error });
-        } else this.setState({ Balance: res.Balance });
-      })
-      .catch((err) => {
-        console.log("Error from vacancy userActions.js:", err);
-        return { balance: "can't connect to server" };
-      });
-  }
+  componentDidMount() {}
   render() {
     return (
       <div className="container">
@@ -64,7 +54,7 @@ class Recharge extends Component {
               home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h6>Current account balance:{this.state.balance}</h6>
+              <h6>Current account balance:{this.state.Balance}</h6>
             </div>
             <br />
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>

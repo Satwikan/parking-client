@@ -27,7 +27,7 @@ class BookSlot extends Component {
     axios
       .get(BACK_URL + "api/account/vacancy")
       .then((res) => {
-        this.setState({ vacancy: res.message });
+        this.setState({ vacancy: res.data.message });
       })
       .catch((err) => {
         console.log("Error from vacancy userActions.js:", err);
@@ -46,14 +46,11 @@ class BookSlot extends Component {
     axios
       .post(BACK_URL + "api/account/book", userData)
       .then((res) => {
-        if (res.error) {
-          this.setState({ errors: res.error });
-        } else if (res.History) {
+        if (res.data.error) {
+          this.setState({ errors: res.data.error });
+        } else if (res.data.History) {
           this.setState({
-            response:
-              "Slot booked Ticket no.: " +
-              res.History[res.History.length - 1].slotNumber +
-              "For more info got to history page",
+            response: res.data.History,
           });
         }
         console.log(res);
@@ -62,6 +59,18 @@ class BookSlot extends Component {
         console.log("Error from Book userActions.js:", err);
       });
   };
+  getResponse() {
+    if (this.state.response) {
+      return (
+        <h5>
+          Slot booked!, Ticket no:
+          {this.state.response[this.state.response.length - 1].slotNumber}
+          <br />
+          For more info go to <a href="/history">history</a>
+        </h5>
+      );
+    }
+  }
   render() {
     return (
       <>
@@ -72,10 +81,14 @@ class BookSlot extends Component {
                 <i className="material-icons left">keyboard_backspace</i> Back
                 to home
               </a>
+              <br />
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <h4>
                   Book your <b>Slot</b> here
                 </h4>
+              </div>
+              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                <h6>{this.state.vacancy}</h6>
               </div>
               <form noValidate onSubmit={this.onSubmit}>
                 <div className="input-field col s12">
@@ -113,7 +126,7 @@ class BookSlot extends Component {
                 <br />
                 <br />
                 <br />
-                <h5>{this.state.response}</h5>
+                <div>{this.getResponse()}</div>
               </form>
             </div>
           </div>
