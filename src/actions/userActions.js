@@ -36,3 +36,12 @@ export const vacancyCheckApi = () => {
       console.log("Error from vacancy userActions.js:", err);
     });
 };
+
+export const balanceCheck = () => {
+  axios
+    .get(BACK_URL + "api/account/balance")
+    .then((res) => res)
+    .catch((err) => {
+      console.log("Error from balance userActions.js:", err);
+    });
+}

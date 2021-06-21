@@ -20,7 +20,7 @@ class BookSlot extends Component {
     }
   }
   componentDidMount() {
-    this.state.vacancy = this.props.vacancyCheckApi().data.message;
+    this.state.vacancy = vacancyCheckApi().data.message;
   }
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
@@ -32,7 +32,7 @@ class BookSlot extends Component {
       vName: this.state.vName,
       vNumber: this.state.vNumber,
     };
-    this.props.bookSlot(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    bookSlotApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
   };
   render() {
     return (
@@ -101,6 +101,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
-export default connect(mapStateToProps, { vacancyCheckApi, bookSlotApi })(
-  BookSlot
-);
+export default connect(mapStateToProps, {})(BookSlot);

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { rechargeApi } from "../../actions/userActions";
+import { rechargeApi,  } from "../../actions/userActions";
 
 class Recharge extends Component {
   constructor() {
@@ -28,7 +28,7 @@ class Recharge extends Component {
       id: this.props.auth.user.id,
       amount: this.state.amount,
     };
-    this.props.rechargeApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    rechargeApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
   };
   accountBalance = (user) => {
     if (user.hasOwnProperty("balance")) return "";
@@ -92,4 +92,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
 });
-export default connect(mapStateToProps, { rechargeApi })(Recharge);
+export default connect(mapStateToProps, {})(Recharge);
