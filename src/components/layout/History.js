@@ -1,4 +1,5 @@
 import React, { Component, useEffect } from "react";
+import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Card } from "antd";
 import { BACK_URL } from "../../proxy";
@@ -13,11 +14,19 @@ class History extends Component {
       History: [],
     };
   }
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors,
+      });
+    }
+  }
+  onSubmit(e) {
+    e.preventDefault();
     const userData = {
       id: this.props.auth.user.id,
     };
-    console.log("here", )
+    console.log("here");
     axios
       .get(BACK_URL + "api/account/history", userData)
       .then((res) => {
@@ -35,7 +44,23 @@ class History extends Component {
   render() {
     return (
       <>
-        {this.state.History.map((item) => {})}
+        <form noValidate onSubmit={this.onSubmit}>
+          <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+            <button
+              style={{
+                borderRadius: "3px",
+                letterSpacing: "1.5px",
+                marginTop: "1rem",
+              }}
+              type="submit"
+              onClick={this.onClick}
+              className="btn btn-large waves-effect waves-light hoverable blue accent-3"
+            >
+              Get History
+            </button>
+          </div>
+        </form>
+        {this.state.History}
         <Card
           title="Default size card"
           extra={<a href="#">More</a>}
@@ -60,8 +85,14 @@ class History extends Component {
     );
   }
 }
+History.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {})(History);
