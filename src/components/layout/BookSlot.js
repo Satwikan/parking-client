@@ -19,8 +19,11 @@ class BookSlot extends Component {
       });
     }
   }
+  // TODO: check it
   componentDidMount() {
-    this.state.vacancy = vacancyCheckApi().data.message;
+    vacancyCheckApi().then((res) => {
+      this.state.vacancy = res.message;
+    });
   }
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });

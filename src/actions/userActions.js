@@ -34,14 +34,16 @@ export const vacancyCheckApi = () => {
     .then((res) => res)
     .catch((err) => {
       console.log("Error from vacancy userActions.js:", err);
+      return { vacancy: "can't connect to server" };
     });
 };
 
-export const balanceCheck = () => {
+export const balanceCheckApi = () => {
   axios
     .get(BACK_URL + "api/account/balance")
     .then((res) => res)
     .catch((err) => {
-      console.log("Error from balance userActions.js:", err);
+      console.log("Error from vacancy userActions.js:", err);
+      return { balance: "can't connect to server" };
     });
-}
+};

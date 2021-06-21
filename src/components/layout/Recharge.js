@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { rechargeApi,  } from "../../actions/userActions";
+// TODO: do it
+import { rechargeApi, balanceCheckApi } from "../../actions/userActions";
 
 class Recharge extends Component {
   constructor() {
@@ -10,6 +11,7 @@ class Recharge extends Component {
     this.state = {
       amount: 0,
       errors: {},
+      balance: "getting your data",
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -30,9 +32,12 @@ class Recharge extends Component {
     };
     rechargeApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
   };
+  // TODO: do it
   accountBalance = (user) => {
-    if (user.hasOwnProperty("balance")) return "";
-    return "Your Current Balance is:" + user.balance;
+    balanceCheckApi().then((res) => {
+      this.state.vacancy = res.balance;
+    });
+    return "Your Current Balance is:" + this.state.balance;
   };
   render() {
     const { user } = this.props.auth;
@@ -46,8 +51,9 @@ class Recharge extends Component {
               home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>{this.accountBalance(user)}</h4>
+              <h5>Current account balance:{this.state.balance}</h5>
             </div>
+            <br/>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4>Add Amount Here</h4>
             </div>
