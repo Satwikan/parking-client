@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { bookSlotApi, vacancyCheckApi } from "../../actions/userActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { BACK_URL } from "../../proxy";
+import axios from "axios";
 
 class BookSlot extends Component {
   constructor() {
@@ -19,11 +20,15 @@ class BookSlot extends Component {
       });
     }
   }
-  // TODO: check it
-  componentDidMount() {
-    vacancyCheckApi().then((res) => {
-      this.state.vacancy = res.message;
-    });
+
+  getVacancy() {
+    axios
+      .get(BACK_URL + "api/account/vacancy")
+      .then((res) => (this.state.vacancy = res.vacancy))
+      .catch((err) => {
+        console.log("Error from vacancy userActions.js:", err);
+        this.state.vacancy = "can't connect to server";
+      });
   }
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
@@ -35,7 +40,12 @@ class BookSlot extends Component {
       vName: this.state.vName,
       vNumber: this.state.vNumber,
     };
-    bookSlotApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    axios
+      .post(BACK_URL + "api/account/book", userData)
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log("Error from Book userActions.js:", err);
+      });
   };
   render() {
     return (

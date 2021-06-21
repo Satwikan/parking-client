@@ -38,9 +38,9 @@ export const vacancyCheckApi = () => {
     });
 };
 
-export const balanceCheckApi = () => {
+export const balanceCheckApi = (userData) => {
   axios
-    .get(BACK_URL + "api/account/balance")
+    .get(BACK_URL + "api/account/balance", userData)
     .then((res) => res)
     .catch((err) => {
       console.log("Error from vacancy userActions.js:", err);

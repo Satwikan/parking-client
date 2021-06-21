@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-// TODO: do it
-import { rechargeApi, balanceCheckApi } from "../../actions/userActions";
+import { BACK_URL } from "../../proxy";
+import axios from "axios";
+
 
 class Recharge extends Component {
   constructor() {
@@ -30,13 +31,25 @@ class Recharge extends Component {
       id: this.props.auth.user.id,
       amount: this.state.amount,
     };
-    rechargeApi(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    // Recharge request
+    axios
+      .post(BACK_URL + "api/account/recharge", userData)
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log("Error from Recharge userActions.js:", err);
+      });
   };
-  // TODO: do it
   accountBalance = (user) => {
-    balanceCheckApi().then((res) => {
-      this.state.vacancy = res.balance;
-    });
+    const userData = {
+      id: user.id,
+    };
+    axios
+      .get(BACK_URL + "api/account/balance", userData)
+      .then((res) => res)
+      .catch((err) => {
+        console.log("Error from vacancy userActions.js:", err);
+        return { balance: "can't connect to server" };
+      });
     return "Your Current Balance is:" + this.state.balance;
   };
   render() {
@@ -53,7 +66,7 @@ class Recharge extends Component {
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h5>Current account balance:{this.state.balance}</h5>
             </div>
-            <br/>
+            <br />
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4>Add Amount Here</h4>
             </div>
